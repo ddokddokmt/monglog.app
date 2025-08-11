@@ -3,12 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>앱에서 보기</title>
-  <!-- OG는 배포 시 절대 URL 권장 -->
-  <meta property="og:title" content="몽록">
-  <meta property="og:description" content="앱에서 열어보세요">
-  <meta property="og:image" content="./ogimage.png">
-  <meta property="og:url" content="https://example.com/open.html">
+  <title>몽록 설치/열기</title>
   <style>
     @font-face {
       font-family: "maintext";
@@ -26,119 +21,52 @@
       font-style: normal;
       font-display: swap;
     }
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      background-color: #FAF7F2;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: optimizeLegibility;
-      font-synthesis: none;
-      overflow: hidden;
-    }
-    img { display: block; max-width: 100%; height: auto; }
-    figure { margin: 0; width: fit-content; height: fit-content; }
-    .hidden { display: none; }
-    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; color: #444; word-break: break-all; }
-    .err { background:#fff; border-radius: 12px; padding:16px; box-shadow: 4px 4px 10px rgba(0,0,0,.15); color:#b00020; }
+    * { box-sizing: border-box; }
+    body { margin:0; background-color:#FAF7F2; font-family:subtext; overflow:hidden; }
+    img { display:block; max-width:100%; height:auto; }
+    figure { margin:0; width:fit-content; height:fit-content; }
+    .hidden { display:none; }
     :root {
-      --bg: #FAF7F2;
-      --text: #444444;
-      --muted: #7c7c7c;
-      --brand: #98507D;
-      --radius-xl: 999px;
-      --shadow: 4px 4px 10px rgba(0,0,0,0.15);
-      --h2-size: clamp(24px, 6vw, 48px);
-      --h2-line: 1.28;
-      --btn-font: clamp(16px, 4.5vw, 32px);
-      --btn-height: clamp(52px, 12vw, 80px);
-      --foot-size: clamp(12px, 3.2vw, 16px);
-      --wrap-max: 560px;
-      --wrap-minpad: 16px;
+      --bg:#FAF7F2; --text:#444; --muted:#7c7c7c; --brand:#98507D; --radius-xl:999px; --shadow:4px 4px 10px rgba(0,0,0,0.15);
+      --h2-size:clamp(24px,6vw,48px); --h2-line:1.28; --btn-font:clamp(16px,4.5vw,32px); --btn-height:clamp(52px,12vw,80px);
+      --foot-size:clamp(12px,3.2vw,16px); --wrap-max:560px; --wrap-minpad:16px;
     }
-    #wrap {
-      max-width: var(--wrap-max);
-      margin: 0 auto;
-      padding: 0 var(--wrap-minpad);
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-    }
-    header { padding: 16px 0; display: flex; justify-content: center; }
-    header figure { padding: 8px 0; }
-    header img { max-width: clamp(120px, 40vw, 240px); height: auto; }
-    main { flex: 1 0 auto; display: flex; flex-direction: column; }
-    .section1 { padding: 8px 0 6px; }
-    .section1 h2 { margin: 0; font-family: "maintext"; font-weight: 400; font-size: var(--h2-size); line-height: var(--h2-line); text-align: center; color: var(--text); }
-    .section1 h2 span { color: var(--brand); font-weight: 400; }
-    .section2 { padding: clamp(6px, 2.5vw, 14px) 0; display: grid; place-items: center; }
-    .section2 img { max-width: min(100%, 420px); max-height: min(42vh, 320px); object-fit: contain; }
-    .section3 { padding: clamp(8px, 2.5vw, 16px) 0 0; display: flex; flex-direction: column; align-items: center; }
-    .btn {
-      width: 70%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      height: var(--btn-height);
-      padding: 0 20px;
-      background-color: var(--brand);
-      color: #fff;
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      text-decoration: none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
-      margin: 0 auto;
-      flex-shrink: 0;
-    }
-    .btn:active { transform: translateY(1px) scale(0.99); }
-    @media (hover:hover) { .btn:hover { opacity: .95; box-shadow: 6px 6px 14px rgba(0,0,0,.18); } }
-    .btn figure { width: clamp(24px, 7vw, 36px); height: clamp(24px, 7vw, 36px); display: inline-block; }
-    .btn figure img { width: 100%; height: 100%; }
-    .btn h2 { margin: 0; font-family: "subtext"; font-weight: 400; font-size: var(--btn-font); line-height: 1; }
-    .btn2 {
-      width: 100%;
-      margin-top: clamp(12px, 3.5vw, 20px);
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-family: "subtext";
-      font-size: var(--btn-font);
-      text-align: center;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      flex-shrink: 0;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn2:active { opacity: .8; }
-    footer { margin-top: clamp(14px, 4vw, 24px); margin-bottom: calc(env(safe-area-inset-bottom, 0) + 16px); text-align: center; color: var(--muted); font-size: var(--foot-size); flex: 0 0 auto; }
+    #wrap { max-width:var(--wrap-max); margin:0 auto; padding:0 var(--wrap-minpad); min-height:100svh; display:flex; flex-direction:column; }
+    header { padding:16px 0; display:flex; justify-content:center; }
+    header img { max-width:clamp(120px,40vw,240px); height:auto; }
+    main { flex:1 0 auto; display:flex; flex-direction:column; }
+    .section1 { padding:8px 0 6px; }
+    .section1 h2 { margin:0; font-family:maintext; font-weight:400; font-size:var(--h2-size); line-height:var(--h2-line); text-align:center; color:var(--text); }
+    .section1 h2 span { color:var(--brand); font-weight:400; }
+    .section2 { padding:clamp(6px,2.5vw,14px) 0; display:grid; place-items:center; }
+    .section2 img { max-width:min(100%,420px); max-height:min(42vh,320px); object-fit:contain; }
+    .section3 { padding:clamp(8px,2.5vw,16px) 0 0; display:flex; flex-direction:column; align-items:center; }
+    .btn { width:70%; display:inline-flex; align-items:center; justify-content:center; gap:10px; height:var(--btn-height); padding:0 20px; background-color:var(--brand); color:#fff; border-radius:var(--radius-xl); box-shadow:var(--shadow); cursor:pointer; text-decoration:none; -webkit-tap-highlight-color:transparent; transition:transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease; margin:0 auto; flex-shrink:0; }
+    .btn:active { transform:translateY(1px) scale(0.99); }
+    @media (hover:hover) { .btn:hover { opacity:.95; box-shadow:6px 6px 14px rgba(0,0,0,.18); } }
+    .btn figure { width:clamp(24px,7vw,36px); height:clamp(24px,7vw,36px); }
+    .btn h2 { margin:0; font-family:subtext; font-weight:400; font-size:var(--btn-font); line-height:1; }
+    .btn2 { width:100%; margin-top:clamp(12px,3.5vw,20px); background:transparent; border:none; color:var(--text); font-family:subtext; font-size:var(--btn-font); text-align:center; cursor:pointer; -webkit-tap-highlight-color:transparent; flex-shrink:0; text-decoration:none; display:inline-block; }
+    .btn2:active { opacity:.8; }
+    footer { margin-top:clamp(14px,4vw,24px); margin-bottom:calc(env(safe-area-inset-bottom,0) + 16px); text-align:center; color:var(--muted); font-size:var(--foot-size); flex:0 0 auto; }
   </style>
 </head>
 <body>
   <div id="wrap">
     <header>
-      <figure>
-        <img src="./lofo.png" alt="몽록 MONG.LOG" />
-      </figure>
+      <figure><img src="./lofo.png" alt="몽록 MONG.LOG" /></figure>
     </header>
-
     <main>
       <section class="section1">
         <h2 id="title">매일의 <span>기록이,</span><br />결국 <span>꿈이 됩니다</span></h2>
         <p id="desc" class="hidden" style="text-align:center;color:#444;font-family:subtext;margin-top:8px;"></p>
       </section>
-
       <section class="section2">
         <figure>
           <img id="thumb" class="hidden" src="" alt="썸네일" />
           <img src="./haemong.png" alt="해몽 일러스트" />
         </figure>
       </section>
-
       <section class="section3">
         <a href="#" id="openBtn" class="btn" role="button" aria-label="몽록 앱 설치/열기">
           <figure><img src="./emblem.png" alt="몽록 엠블렘" /></figure>
@@ -147,77 +75,28 @@
         <a href="#" id="openBtn2" class="btn2" role="button" aria-label="몽록 앱 열기">몽록 앱 열기 〉</a>
       </section>
     </main>
-
     <footer>입앱 브라우저에서는 자동실행이 제한될 수 있습니다.</footer>
   </div>
-  <div id="error" class="err hidden" role="alert"></div>
-  <div id="debug" class="code hidden"></div>
   <script>
-    (function () {
-      const APP_SCHEME = 'monglog';
-      const APPSTORE_URL = 'https://apps.apple.com/app/id6744044615';
-      const DEFAULT_THUMB = '';
-      const $ = (id) => document.getElementById(id);
-      const params = new URLSearchParams(location.search);
-      const type = params.get('type');
-      const postId = params.get('postId');
-      const userId = params.get('userId');
-      const titleEl = $('title');
-      const descEl = $('desc');
-      const thumbEl = $('thumb');
-      const errEl = $('error');
-      const btn1 = $('openBtn');
-      const btn2 = $('openBtn2');
-
-      function showError(msg) {
-        if (!errEl) return;
-        errEl.textContent = msg;
-        errEl.classList.remove('hidden');
+    (function(){
+      const APP_SCHEME='monglog';
+      const APPSTORE_URL='https://apps.apple.com/app/id6744044615';
+      const params=new URLSearchParams(location.search);
+      const type=params.get('type');
+      const postId=params.get('postId');
+      const userId=params.get('userId');
+      const thumbEl=document.getElementById('thumb');
+      const btn1=document.getElementById('openBtn');
+      const btn2=document.getElementById('openBtn2');
+      function setThumb(url){if(!url)return;thumbEl.src=url;thumbEl.classList.remove('hidden');}
+      function buildScheme(){
+        if(type==='feed'&&postId){return `${APP_SCHEME}://feed?postId=${encodeURIComponent(postId)}`;}
+        if(type==='profile'&&userId){return `${APP_SCHEME}://profile?uid=${encodeURIComponent(userId)}`;}
+        return `${APP_SCHEME}://home`;
       }
-      function setThumb(url) {
-        if (!url || !thumbEl) return;
-        thumbEl.src = url;
-        thumbEl.classList.remove('hidden');
-      }
-      function buildScheme() {
-        if (type === 'feed' && postId) {
-          return `${APP_SCHEME}://feed?postId=${encodeURIComponent(postId)}`;
-        }
-        if (type === 'profile' && userId) {
-          return `${APP_SCHEME}://profile?uid=${encodeURIComponent(userId)}`;
-        }
-        return null; // 필요 시: return `${APP_SCHEME}://home`;
-      }
-      // (function initUI() {
-      //   if (type === 'feed' && postId) {
-      //     titleEl && (titleEl.textContent = `피드 #${postId}`);
-      //     if (descEl) { descEl.textContent = '앱에서 이 피드를 열어보세요.'; descEl.classList.remove('hidden'); }
-      //     setThumb(DEFAULT_THUMB);
-      //   } else if (type === 'profile' && userId) {
-      //     titleEl && (titleEl.textContent = `프로필 #${userId}`);
-      //     if (descEl) { descEl.textContent = '앱에서 이 프로필을 열어보세요.'; descEl.classList.remove('hidden'); }
-      //     setThumb(DEFAULT_THUMB);
-      //   } else {
-      //     showError('필요한 파라미터가 없습니다. 예: ?type=feed&postId=123 또는 ?type=profile&userId=456');
-      //   }
-      // })();
-      function openApp(e) {
-        if (e) e.preventDefault();
-        const scheme = buildScheme();
-        if (!scheme) return;
-        const start = Date.now();
-        window.location.href = scheme;
-        const FALLBACK_MS = 1500;
-        setTimeout(function () {
-          if (Date.now() - start < FALLBACK_MS) {
-            window.location.href = APPSTORE_URL;
-          }
-        }, FALLBACK_MS);
-      }
-      btn1 && btn1.addEventListener('click', openApp);
-      btn2 && btn2.addEventListener('click', openApp);
-      // 자동 시도는 환경에 따라 막힐 수 있음. 필요 시 사용
-      // setTimeout(openApp, 400);
+      function openApp(e){if(e)e.preventDefault();const scheme=buildScheme();const start=Date.now();window.location.href=scheme;const FALLBACK_MS=1500;setTimeout(function(){if(Date.now()-start<FALLBACK_MS){window.location.href=APPSTORE_URL;}},FALLBACK_MS);}
+      btn1&&btn1.addEventListener('click',openApp);
+      btn2&&btn2.addEventListener('click',openApp);
     })();
   </script>
 </body>
