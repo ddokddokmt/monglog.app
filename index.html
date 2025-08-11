@@ -155,7 +155,7 @@
   <script>
     (function () {
       const APP_SCHEME = 'monglog';
-      const APPSTORE_URL = 'https://apps.apple.com/app/idYOUR_APPSTORE_ID';
+      const APPSTORE_URL = 'https://apps.apple.com/app/id6744044615';
       const DEFAULT_THUMB = '';
       const $ = (id) => document.getElementById(id);
       const params = new URLSearchParams(location.search);
@@ -188,19 +188,19 @@
         }
         return null; // 필요 시: return `${APP_SCHEME}://home`;
       }
-      (function initUI() {
-        if (type === 'feed' && postId) {
-          titleEl && (titleEl.textContent = `피드 #${postId}`);
-          if (descEl) { descEl.textContent = '앱에서 이 피드를 열어보세요.'; descEl.classList.remove('hidden'); }
-          setThumb(DEFAULT_THUMB);
-        } else if (type === 'profile' && userId) {
-          titleEl && (titleEl.textContent = `프로필 #${userId}`);
-          if (descEl) { descEl.textContent = '앱에서 이 프로필을 열어보세요.'; descEl.classList.remove('hidden'); }
-          setThumb(DEFAULT_THUMB);
-        } else {
-          showError('필요한 파라미터가 없습니다. 예: ?type=feed&postId=123 또는 ?type=profile&userId=456');
-        }
-      })();
+      // (function initUI() {
+      //   if (type === 'feed' && postId) {
+      //     titleEl && (titleEl.textContent = `피드 #${postId}`);
+      //     if (descEl) { descEl.textContent = '앱에서 이 피드를 열어보세요.'; descEl.classList.remove('hidden'); }
+      //     setThumb(DEFAULT_THUMB);
+      //   } else if (type === 'profile' && userId) {
+      //     titleEl && (titleEl.textContent = `프로필 #${userId}`);
+      //     if (descEl) { descEl.textContent = '앱에서 이 프로필을 열어보세요.'; descEl.classList.remove('hidden'); }
+      //     setThumb(DEFAULT_THUMB);
+      //   } else {
+      //     showError('필요한 파라미터가 없습니다. 예: ?type=feed&postId=123 또는 ?type=profile&userId=456');
+      //   }
+      // })();
       function openApp(e) {
         if (e) e.preventDefault();
         const scheme = buildScheme();
