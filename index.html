@@ -238,34 +238,108 @@
     </main>
     <footer>인앱 브라우저에서는 자동실행이 제한될 수 있습니다.</footer>
   </div>
-  <script>
-    (function () {
-      const APP_SCHEME = 'monglog';
-      const APPSTORE_URL = 'https://apps.apple.com/app/id6744044615';
-      const params = new URLSearchParams(location.search);
-      const type = params.get('type');
-      const postId = params.get('postId');
-      const userId = params.get('userId');
-      const thumbEl = document.getElementById('thumb');
-      const btn1 = document.getElementById('openBtn');
-      const btn2 = document.getElementById('openBtn2');
-      function setThumb(url) { if (!url) return; thumbEl.src = url; thumbEl.classList.remove('hidden'); }
-      function buildScheme() {
-        if (type === 'feed' && postId) { return `${APP_SCHEME}://feed?postId=${encodeURIComponent(postId)}`; }
-        if (type === 'profile' && userId) { return `${APP_SCHEME}://profile?uid=${encodeURIComponent(userId)}`; }
-        return `${APP_SCHEME}://home`;
+<script>
+  (function () {
+    // ====== 설정 ======
+    const APP_SCHEME = 'monglog';
+    const IOS_APPSTORE = 'https://apps.apple.com/app/id6744044615';
+    const ANDROID_PKG = 'com.ddokddok.monglog';
+    const ANDROID_PLAY = 'https://play.google.com/store/apps/details?id=com.ddokddok.monglog' + ANDROID_PKG;
+    const ANDROID_MARKET = 'market://details?id=' + ANDROID_PKG;
+
+    // 쿼리 파라미터
+    const params = new URLSearchParams(location.search);
+    const type = params.get('type');        // 'feed' | 'profile'
+    const postId = params.get('postId');
+    const userId = params.get('userId');
+
+    const btn1 = document.getElementById('openBtn');  // 설치 버튼
+    const btn2 = document.getElementById('openBtn2'); // 열기 버튼
+
+    // UA 판별
+    const ua = (navigator.userAgent || navigator.vendor || '').toLowerCase();
+    const isAndroid = ua.includes('android');
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isMobile = isAndroid || isIOS;
+
+    // 경로 빌드 (scheme / intent 공용)
+    function buildPath() {
+      if (type === 'feed' && postId) return 'feed?postId=' + encodeURIComponent(postId);
+      if (type === 'profile' && userId) return 'profile?uid=' + encodeURIComponent(userId);
+      return 'home';
+    }
+
+    function buildSchemeUrl() {
+      return APP_SCHEME + '://' + buildPath();
+    }
+
+    // Android Chrome 최적: intent:// + fallback_url
+    function buildAndroidIntentUrl() {
+      // intent://<PATH>#Intent;scheme=<SCHEME>;package=<PKG>;S.browser_fallback_url=<ENCODED_PLAY>;end
+      const path = buildPath();
+      const fallback = encodeURIComponent(ANDROID_PLAY);
+      return `intent://${path}#Intent;scheme=${APP_SCHEME};package=${ANDROID_PKG};S.browser_fallback_url=${fallback};end`;
+    }
+
+    function openApp(e) {
+      e && e.preventDefault();
+
+      // 데스크톱은 스토어/플레이로만
+      if (!isMobile) {
+        window.location.href = ANDROID_PLAY; // 웹/데스크톱 방문 시 안내용으로 플레이 링크 노출
+        return;
       }
-      function openApp(e) {
-        e.preventDefault();
-        const scheme = buildScheme();
+
+      if (isAndroid) {
+        // 1) intent:// 시도 (Chrome/대부분 브라우저에서 앱 실행 또는 플레이스토어 자동 fallback)
+        const intentUrl = buildAndroidIntentUrl();
+        const start = Date.now();
+        window.location.href = intentUrl;
+
+        // 2) 일부 인앱브라우저에서 intent:// 무시될 때 대비 타이머 fallback
+        setTimeout(function () {
+          // 사용자가 앱으로 전환됐으면 보통 1.5초 내 페이지가 백그라운드됨
+          if (Date.now() - start < 1500) {
+            // intent://를 못 썼다면 일반 scheme 시도 후 플레이스토어
+            const scheme = buildSchemeUrl();
+            const t0 = Date.now();
+            window.location.href = scheme;
+            setTimeout(function () {
+              if (Date.now() - t0 < 1500) {
+                // market:// 먼저, 실패 시 https:// 플레이
+                try { window.location.href = ANDROID_MARKET; } catch (_) { window.location.href = ANDROID_PLAY; }
+              }
+            }, 900);
+          }
+        }, 1200);
+        return;
+      }
+
+      if (isIOS) {
+        // iOS는 커스텀 스킴 + 타이머로 App Store fallback
+        const scheme = buildSchemeUrl();
         const start = Date.now();
         window.location.href = scheme;
-        setTimeout(function () { if (Date.now() - start < 1500) { window.location.href = APPSTORE_URL; } }, 1200);
+        setTimeout(function () {
+          if (Date.now() - start < 1500) {
+            window.location.href = IOS_APPSTORE;
+          }
+        }, 1200);
       }
-      btn1.addEventListener('click', openApp);
-      btn2.addEventListener('click', openApp);
-    })();
-  </script>
+    }
+
+    btn1.addEventListener('click', openApp);
+    btn2.addEventListener('click', openApp);
+
+    // 버튼 라벨도 기기별로 살짝 맞춤 (선택 사항)
+    const h2 = btn1.querySelector('h2');
+    if (isAndroid) h2.textContent = '몽록 앱 설치 (Android)';
+    else if (isIOS) h2.textContent = '몽록 앱 설치 (iOS)';
+    else h2.textContent = '몽록 앱 설치';
+
+  })();
+</script>
+
 </body>
 
 
